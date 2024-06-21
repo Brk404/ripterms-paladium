@@ -47,4 +47,39 @@ BOOL WINAPI DllMain(
         break;
     }
     return TRUE;  // Successful DLL_PROCESS_ATTACH.
+    #include <iostream>
+#include <vector>
+#include <string>
+
+// Structure représentant une base
+struct Base {
+    std::string player;
+    int x;
+    int y;
+    int z;
+};
+
+// Fonction pour localiser les bases
+std::vector<Base> locateBases() {
+    // Exemple de bases - à remplacer par la logique de localisation réelle
+    std::vector<Base> bases = {
+        {"Player1", 100, 64, 200},
+        {"Player2", -300, 70, 150},
+        {"Player3", 500, 68, -400}
+    };
+    return bases;
+}
+
+void displayBases(const std::vector<Base>& bases) {
+    for (const auto& base : bases) {
+        std::cout << "Base de " << base.player << ": (" << base.x << ", " << base.y << ", " << base.z << ")\n";
+    }
+}
+
+int main() {
+    std::vector<Base> bases = locateBases();
+    displayBases(bases);
+    return 0;
+}
+
 }
