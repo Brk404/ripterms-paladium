@@ -11,6 +11,88 @@
 #include "gl/GL.h"
 #include "../Cache/Cache.h"
 #include "../../net/minecraft/client/renderer/ActiveRenderInfo/ActiveRenderInfo.h"
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+
+// Ajoutez les inclusions nécessaires
+#include <vector>
+#include <string>
+
+// Structure représentant une base
+struct Base {
+    std::string player;
+    int x;
+    int y;
+    int z;
+};
+
+// Fonction pour localiser les bases
+std::vector<Base> locateBases() {
+    std::vector<Base> bases = {
+        {"Player1", 100, 64, 200},
+        {"Player2", -300, 70, 150},
+        {"Player3", 500, 68, -400}
+    };
+    return bases;
+}
+
+// Variable globale pour stocker les bases localisées
+std::vector<Base> locatedBases;
+
+void ShowLocateBasesWindow() {
+    if (ImGui::Begin("Locate Bases")) {
+        if (ImGui::Button("Locate")) {
+            locatedBases = locateBases();
+        }
+
+        ImGui::Separator();
+
+        for (const auto& base : locatedBases) {
+            ImGui::Text("Base de %s: (%d, %d, %d)", base.player.c_str(), base.x, base.y, base.z);
+        }
+
+        ImGui::End();
+    }
+}
+
+int main() {
+    // Configuration et initialisation d'ImGui
+
+    // Boucle principale
+    while (!glfwWindowShouldClose(window)) {
+        // Début de la nouvelle frame ImGui
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        // Afficher la fenêtre de localisation des bases
+        ShowLocateBasesWindow();
+
+        // Rendu de l'interface utilisateur
+        ImGui::Render();
+        int display_w, display_h;
+        glfwGetFramebufferSize(window, &display_w, &display_h);
+        glViewport(0, 0, display_w, display_h);
+        glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+        glClear(GL_COLOR_BUFFER_BIT);
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        // Swap des buffers
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+
+    // Nettoyage
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+
+    glfwDestroyWindow(window);
+    glfwTerminate();
+
+    return 0;
+}
 
 namespace
 {
